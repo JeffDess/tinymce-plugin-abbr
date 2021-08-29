@@ -12,8 +12,11 @@
         title: 'mceAbbr_title',
         body: [
           {
-            type: 'label',
-            text: 'mceAbbr_instructions'
+            type: 'textbox',
+            name: 'content',
+            size: 40,
+            label: 'mceAbbr_contentLabel',
+            value: getContent(editor)
           },
           {
           type: 'textbox',
@@ -28,12 +31,12 @@
           label: ' ',
           text: 'mceAbbr_deleteBtnText',
           hidden: hasTitle ? false : true,
-          onclick: () => { 
+          onclick: () => {
             removeAbbr(editor)
             editor.windowManager.close()
           }
         }],
-        onsubmit: e =>  insertAbbr(editor, e.data.title),
+        onsubmit: e => insertAbbr(editor, e.data.title, e.data.content),
       })
     })
 
@@ -64,6 +67,12 @@
       : ''
   }
 
+  function getContent (editor) {
+    return isAbbr(editor.selection.getNode()) 
+      ? editor.selection.getNode().innerHTML 
+      : editor.selection.getContent()
+  }
+
   function setContentEditable (state) {
     return nodes => {
       nodes.forEach(node => {
@@ -74,30 +83,29 @@
     }
   }
 
-  function insertAbbr(editor, title) {
+  function insertAbbr(editor, title, content) {
     const selectedNode = editor.selection.getNode()
 
     if (isAbbr(selectedNode)) {
-      if (title === '') {
-        removeAbbr(editor)
+      if (title === '' || content === '') {
+        removeAbbr(editor, content)
       }
       else {
         selectedNode.removeAttribute('title')
         selectedNode.title = title
+        selectedNode.innerHTML = content
       }
     } else {
       editor.focus()
-      editor.execCommand('mceInsertContent', false, editor.dom.createHTML('abbr', { title: title }, editor.selection.getContent()))
+      editor.execCommand('mceInsertContent', false, editor.dom.createHTML('abbr', { title: title }, content))
       editor.selection.collapse(true)
     }
     editor.undoManager.add()
   }
 
-  function removeAbbr(editor) {
-    const selectedNode = editor.selection.getNode()
-
-    if (isAbbr(selectedNode)) {
-      editor.selection.setContent(selectedNode.innerHTML)
+  function removeAbbr(editor, content=null) {
+    if (isAbbr(editor.selection.getNode())) {
+      editor.selection.setContent(content === null ? getContent() : content)
       editor.undoManager.add()
       editor.selection.collapse(true)
     }

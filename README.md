@@ -7,6 +7,7 @@ The `<abbr>` tag is a valid HTML5 element that allows to insert definitions of a
 
 ## Features
 
+* Insert <abbr> tag and content
 * Select text and wrap it within an `<abbr>` tag
 * Single click to autoselect existing `<abbr>` tags
 * Edit existing `<abbr>` tags
