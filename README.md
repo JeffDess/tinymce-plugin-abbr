@@ -31,7 +31,7 @@ The `<abbr>` tag is a valid HTML5 element that allows to insert definitions of a
 tinymce.init({
     ...
     plugins: 'abbr'
-    valid_elements : 'abbr[title|lang]'
+    extended_valid_elements : 'abbr[title|lang]'
 });
 
 ```
