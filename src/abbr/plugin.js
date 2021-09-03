@@ -32,7 +32,7 @@
           text: 'mceAbbr_deleteBtnText',
           hidden: hasTitle ? false : true,
           onclick: () => {
-            removeAbbr(editor)
+              removeAbbr(editor)
             editor.windowManager.close()
           }
         }],
@@ -105,7 +105,7 @@
 
   function removeAbbr(editor, content=null) {
     if (isAbbr(editor.selection.getNode())) {
-      editor.selection.setContent(content === null ? getContent() : content)
+      editor.selection.setContent(content === null ? getContent(editor) : content)
       editor.undoManager.add()
       editor.selection.collapse(true)
     }
